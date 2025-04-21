@@ -6,7 +6,7 @@ import DecrementButton from "./Components/DecrementButton";
 import SetCountForm from "./Components/SetCountForm";
 import contractABI from "./Components/contractAbi.json";
 
-const contractAddress = "0xDe25a0a4f3205a4BE91F41F1e998DAfCe3ac2572";
+const contractAddress = "0x95FBc5F3342Cb1F3dFFcF62D880De2c78e8cbBa7";
 
 function App() {
   const [Provider, setProvider] = useState(null);
