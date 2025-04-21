@@ -1,51 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import CounterDisplay from './CounterDisplay';
-import IncrementButton from './IncrementButton';
-import DecrementButton from './DecrementButton';
-import SetCountForm from './SetCountForm';
-import contractABI from './contractABI.json';
+import React, { useState } from "react";
+import { ethers } from "ethers";
+import CounterDisplay from "./Components/CounterDisplay";
+import IncrementButton from "./Components/IncrementButton";
+import DecrementButton from "./Components/DecrementButton";
+import SetCountForm from "./Components/SetCountForm";
+import contractABI from "./Components/contractAbi.json";
 
-const contractAddress = '0xYourContractAddressHere'; // Replace with your deployed address
+const contractAddress = "0xDe25a0a4f3205a4BE91F41F1e998DAfCe3ac2572";
 
 function App() {
-  const [provider, setProvider] = useState(null);
+  const [Provider, setProvider] = useState(null);
   const [contract, setContract] = useState(null);
-  const [account, setAccount] = useState('');
+  const [account, setAccount] = useState("");
   const [count, setCount] = useState(0);
+  const [isConnecting, setIsConnecting] = useState(false);
 
-  // Connect to wallet and set up contract
-  useEffect(() => {
-    const connectWallet = async () => {
-      if (window.ethereum) {
-        try {
-          // Request account access via MetaMask
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          setProvider(provider);
-          const signer = provider.getSigner();
-          const contract = new ethers.Contract(contractAddress, contractABI, signer);
-          setContract(contract);
-          const accounts = await provider.listAccounts();
-          setAccount(accounts[0]);
-          // Fetch initial count
-          const currentCount = await contract.count();
-          setCount(currentCount.toNumber());
-        } catch (error) {
-          console.error('Failed to connect wallet:', error);
-        }
-      } else {
-        alert('Please install MetaMask!');
+  // Connect to wallet
+  const connectWallet = async () => {
+    if (typeof window.ethereum !== "undefined") {
+      setIsConnecting(true);
+      try {
+        // Request account access via MetaMask
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const provider = new ethers.BrowserProvider(window.ethereum); // Use BrowserProvider for ethers v6
+        setProvider(provider);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
+        setContract(contract);
+        const address = await signer.getAddress();
+        setAccount(address);
+        // Fetch initial count
+        const currentCount = await contract.count();
+        setCount(Number(currentCount)); // Use Number() for BigNumber in ethers v6
+      } catch (error) {
+        console.error("Failed to connect wallet:", error);
+        alert("Failed to connect wallet: " + error.message);
+      } finally {
+        setIsConnecting(false);
       }
-    };
-    connectWallet();
-  }, []);
+    } else {
+      alert("Please install MetaMask!");
+      setIsConnecting(false);
+    }
+  };
 
   // Function to update count after transactions
   const updateCount = async () => {
     if (contract) {
       const currentCount = await contract.count();
-      setCount(currentCount.toNumber());
+      setCount(Number(currentCount)); // Use Number() for BigNumber
     }
   };
 
@@ -63,7 +70,18 @@ function App() {
           <SetCountForm contract={contract} updateCount={updateCount} />
         </>
       ) : (
-        <p className="text-red-500">Please connect your wallet.</p>
+        <div className="text-center">
+          <p className="text-red-500 mb-4">Please connect your wallet.</p>
+          <button
+            onClick={connectWallet}
+            disabled={isConnecting}
+            className={`px-4 py-2 text-white rounded ${
+              isConnecting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+            }`}
+          >
+            {isConnecting ? "Connecting..." : "Connect Wallet"}
+          </button>
+        </div>
       )}
     </div>
   );
