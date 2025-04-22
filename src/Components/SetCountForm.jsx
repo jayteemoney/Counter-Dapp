@@ -16,7 +16,7 @@ function SetCountForm({ contract, updateCount }) {
   };
 
   return (
-    <div className="mt-4 flex space-x-2">
+    <div className="mt-4  space-x-2">
       <input
         type="number"
         value={newCount}
@@ -25,7 +25,7 @@ function SetCountForm({ contract, updateCount }) {
         className="px-2 py-1 border rounded"
       />
       <button
-        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        className="px-4 py-2 bg-green-900 text-white rounded hover:bg-green-950"
         onClick={handleSetCount}
       >
         Set Count
