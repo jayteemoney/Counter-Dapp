@@ -14,7 +14,7 @@ function DecrementButton({ contract, updateCount }) {
 
   return (
     <button
-      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+      className="px-4 py-2 bg-[#963934] text-white rounded hover:bg-red-600"
       onClick={handleDecrement}
     >
       Decrement
