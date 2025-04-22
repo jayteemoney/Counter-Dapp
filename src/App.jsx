@@ -57,32 +57,34 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold mb-4">Counter DApp</h1>
-      {account ? (
-        <>
-          <p className="mb-2 text-sm">Connected account: {account}</p>
-          <CounterDisplay count={count} />
-          <div className="mt-4 space-x-2">
-            <IncrementButton contract={contract} updateCount={updateCount} />
-            <DecrementButton contract={contract} updateCount={updateCount} />
+    <div className="min-h-screen bg-[#0a1225] flex justify-center items-center">
+      <div className="border-4 border-blue-800 rounded-lg p-6 bg-white shadow-lg w-full max-w-md">
+        <h1 className="text-3xl font-bold mb-4 text-center">Counter DApp</h1>
+        {account ? (
+          <>
+            <p className="mb-2 text-sm text-center">Connected account: {account}</p>
+            <CounterDisplay count={count} />
+            <div className="mt-4 flex justify-center space-x-2">
+              <IncrementButton contract={contract} updateCount={updateCount} />
+              <DecrementButton contract={contract} updateCount={updateCount} />
+            </div>
+            <SetCountForm contract={contract} updateCount={updateCount} />
+          </>
+        ) : (
+          <div className="text-center">
+            <p className="text-red-500 mb-4">Please connect your wallet.</p>
+            <button
+              onClick={connectWallet}
+              disabled={isConnecting}
+              className={`px-4 py-2 text-white rounded ${
+                isConnecting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+              }`}
+            >
+              {isConnecting ? "Connecting..." : "Connect Wallet"}
+            </button>
           </div>
-          <SetCountForm contract={contract} updateCount={updateCount} />
-        </>
-      ) : (
-        <div className="text-center">
-          <p className="text-red-500 mb-4">Please connect your wallet.</p>
-          <button
-            onClick={connectWallet}
-            disabled={isConnecting}
-            className={`px-4 py-2 text-white rounded ${
-              isConnecting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            {isConnecting ? "Connecting..." : "Connect Wallet"}
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
