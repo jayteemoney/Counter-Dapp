@@ -25,7 +25,7 @@ function SetCountForm({ contract, updateCount }) {
         className="px-2 py-1 border rounded"
       />
       <button
-        className="px-4 py-2 bg-green-900 text-white rounded hover:bg-green-950"
+        className="px-4 py-2 bg-green-800 text-white rounded hover:bg-green-950"
         onClick={handleSetCount}
       >
         Set Count
